@@ -1,0 +1,38 @@
+docker pull <<image>>
+
+let image = python:3.9 [image_name:tag]
+
+# Run and create a new container and enter into bash
+docker run -it --entrypoint=bash <<image_name>>
+
+# Execute a command in a running container
+docker exec -it <<container_name>> bash 
+
+# Start a container
+docker start -i <<container_name>>
+
+# Stop a container
+docker stop <<container_name>>
+
+# List all running containers
+docker ps
+
+# List all containers (including stopped ones)
+docker ps -a
+
+# Remove a container
+docker rm <<container_name>>
+
+# Remove an image
+docker rmi <<image_name>>
+
+# Build an image from a Dockerfile
+docker build -t <<image_name>> .
+
+# Tag an image
+docker tag <<image_name>> <<new_image_name>>
+
+# Push an image to a registry
+docker push <<image_name>>
+
+
