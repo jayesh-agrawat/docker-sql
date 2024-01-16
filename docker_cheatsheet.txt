@@ -5,6 +5,13 @@ let image = python:3.9 [image_name:tag]
 # Run and create a new container and enter into bash
 docker run -it --entrypoint=bash <<image_name>>
 
+/**
+ * This command runs a Docker container in interactive mode with the entrypoint set to bash.
+ * It also sets an environment variable ARG_NAME with the value ARG_VALUE.
+ * Replace <<image_name>> with the name of the Docker image you want to run.
+ */
+docker run -it --entrypoint=bash -e ARG_NAME=ARG_VALUE <<image_name>>
+
 # Execute a command in a running container
 docker exec -it <<container_name>> bash 
 
