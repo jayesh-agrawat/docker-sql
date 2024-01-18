@@ -2,7 +2,7 @@ docker pull <<image>>
 
 let image = python:3.9 [image_name:tag]
 
-# Run and create a new container and enter into bash
+// Run and create a new container and enter into bash
 docker run -it --entrypoint=bash <<image_name>>
 
 /**
@@ -12,34 +12,59 @@ docker run -it --entrypoint=bash <<image_name>>
  */
 docker run -it --entrypoint=bash -e ARG_NAME=ARG_VALUE <<image_name>>
 
-# Execute a command in a running container
+// Execute a command in a running container
 docker exec -it <<container_name>> bash 
 
-# Start a container
+// Start a container
 docker start -i <<container_name>>
 
-# Stop a container
+// Stop a container
 docker stop <<container_name>>
 
-# List all running containers
+// List all running containers
 docker ps
 
-# List all containers (including stopped ones)
+// List all containers (including stopped ones)
 docker ps -a
 
-# Remove a container
+// Remove a container
 docker rm <<container_name>>
 
-# Remove an image
+// Remove an image
 docker rmi <<image_name>>
 
-# Build an image from a Dockerfile
+// Build an image from a Dockerfile
 docker build -t <<image_name>> .
 
-# Tag an image
+// Tag an image
 docker tag <<image_name>> <<new_image_name>>
 
-# Push an image to a registry
+// Push an image to a registry
 docker push <<image_name>>
 
 
+# The 'docker run' command is used to create a new container from a Docker image.
+# The '-it' option allows you to interact with the container via the terminal.
+
+docker run -it \
+
+    # The '-e' option is used to set environment variables inside the container.
+    # Here, we're setting the PostgreSQL username, password, and database name.
+    -e POSTGRES_USER="root" \
+    -e POSTGRES_PASSWORD="root" \
+    -e POSTGRES_DB="ny_taxi" \
+
+    # The '-v' option mounts a volume from the host to the container.
+    # This maps the 'nyp_taxi_pg_data' directory in the current directory on the host
+    # to the '/var/lib/postgresql/data' directory in the container.
+    # This is where PostgreSQL stores its data.
+    -v "$(pwd)/nyp_taxi_pg_data:/var/lib/postgresql/data" \
+
+    # The '-p' option maps a network port from the host to the container.
+    # Here, we're mapping port 5432 on the host to port 5432 on the container.
+    # This is the default port that PostgreSQL listens on.
+    -p 5432:5432 \
+
+    # Finally, 'postgres:13' is the Docker image that the container will be based on.
+    # This is an official Docker image for PostgreSQL, and '13' is the tag specifying the version to use.
+    postgres:13
