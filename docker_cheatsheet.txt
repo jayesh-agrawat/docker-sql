@@ -42,6 +42,13 @@ docker tag <<image_name>> <<new_image_name>>
 // Push an image to a registry
 docker push <<image_name>>
 
+docker run -it \                                                                                   
+    -e POSTGRES_USER="root" \
+    -e POSTGRES_PASSWORD="root" \
+    -e POSTGRES_DB="ny_taxi" \
+    -v "$(pwd)/nyp_taxi_pg_data:/var/lib/postgresql/data" \
+    -p 5432:5432 \
+    postgres:13
 
 # The 'docker run' command is used to create a new container from a Docker image.
 # The '-it' option allows you to interact with the container via the terminal.
