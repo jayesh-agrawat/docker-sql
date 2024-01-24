@@ -42,36 +42,55 @@ docker tag <<image_name>> <<new_image_name>>
 // Push an image to a registry
 docker push <<image_name>>
 
+docker run  \                                                                                   
+    -e POSTGRES_USER="root" \
+    -e POSTGRES_PASSWORD="root" \
+    -e POSTGRES_DB="ny_taxi" \
+    -v "$(pwd)/nyp_taxi_pg_data:/var/lib/postgresql/data" \
+    -p 5432:5432 \
+    postgres:13 \
+
+docker run -e POSTGRES_USER="root" \
+    -e POSTGRES_PASSWORD="root" \
+    -e POSTGRES_DB="ny_taxi" \
+    -v "$(pwd)/nyp_taxi_pg_data:/var/lib/postgresql/data" \
+    -p 5432:5432 \
+    postgres:13
+
+
+# The '-it' option allows you to interact with the container via the terminal.
+
+# The '-v' option mounts a volume from the host to the container.
+# This maps the 'nyp_taxi_pg_data' directory in the current directory on the host
+# to the '/var/lib/postgresql/data' directory in the container.
+# This is where PostgreSQL stores its data.
+-v "$(pwd)/nyp_taxi_pg_data:/var/lib/postgresql/data" \
+
+# The '-p' option maps a network port from the host to the container.
+# Here, we're mapping port 5432 on the host to port 5432 on the container.
+# This is the default port that PostgreSQL listens on.
+-p 5432:5432 \
+
+## PGADMIN
+
+docker pull dpage/pgadmin4
+
+docker run -it \
+    -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \ 
+    -e PGADMIN_DEFAULT_PASSWORD="root" \
+    -p 8080:80 \
+    dpage/pgadmin4
+
+## network
+docker network create pg-network
+
+
 docker run -it \                                                                                   
     -e POSTGRES_USER="root" \
     -e POSTGRES_PASSWORD="root" \
     -e POSTGRES_DB="ny_taxi" \
     -v "$(pwd)/nyp_taxi_pg_data:/var/lib/postgresql/data" \
+    --network=pg-network \
+    --name pg-database \
     -p 5432:5432 \
-    postgres:13
-
-# The 'docker run' command is used to create a new container from a Docker image.
-# The '-it' option allows you to interact with the container via the terminal.
-
-docker run -it \
-
-    # The '-e' option is used to set environment variables inside the container.
-    # Here, we're setting the PostgreSQL username, password, and database name.
-    -e POSTGRES_USER="root" \
-    -e POSTGRES_PASSWORD="root" \
-    -e POSTGRES_DB="ny_taxi" \
-
-    # The '-v' option mounts a volume from the host to the container.
-    # This maps the 'nyp_taxi_pg_data' directory in the current directory on the host
-    # to the '/var/lib/postgresql/data' directory in the container.
-    # This is where PostgreSQL stores its data.
-    -v "$(pwd)/nyp_taxi_pg_data:/var/lib/postgresql/data" \
-
-    # The '-p' option maps a network port from the host to the container.
-    # Here, we're mapping port 5432 on the host to port 5432 on the container.
-    # This is the default port that PostgreSQL listens on.
-    -p 5432:5432 \
-
-    # Finally, 'postgres:13' is the Docker image that the container will be based on.
-    # This is an official Docker image for PostgreSQL, and '13' is the tag specifying the version to use.
-    postgres:13
+    
