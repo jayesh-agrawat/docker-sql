@@ -1,9 +1,13 @@
 FROM python:3.9
 
-RUN pip install pandas
-
+RUN pip install pandas sqlalchemy psycopg2-binary pyarrow
 WORKDIR /app
 
-COPY pipeline.py  pipeline.py
+RUN mkdir data
+RUN mkdir data/csv
+RUN mkdir data/parquet
 
-ENTRYPOINT ["bash"]
+
+COPY ingest_data.py  ingest_data.py
+
+ENTRYPOINT ["python","ingest_data.py"]
