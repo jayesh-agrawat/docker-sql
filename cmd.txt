@@ -117,3 +117,15 @@ python3 ingest_data.py \
     --database=ny_taxi \
     --table=yellow_taxi_trips \
     --url=${URL} 
+
+docker build -t taxi_ingest:v0001 .
+
+docker run -it --network=pg-network \
+    taxi_ingest:v2 \
+    --user=root \
+    --password=root \
+    --host=pg-database \
+    --port=5432 \
+    --database=ny_taxi \
+    --table=yellow_taxi_trips \
+    --url=${URL}

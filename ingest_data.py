@@ -20,10 +20,10 @@ def main(parser):
     # download the csv file
     parquet_name = "output.parquet"
     csv_name = "output.csv"
-    os.system(f"curl {url} -o data/parquet/{parquet_name}")
+    os.system(f"wget -O data/parquet/{parquet_name} {url}")
 
     engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{database}')
-    print(pd.io.sql.get_schema(df,name="yellow_tax",con=engine))
+    # print(pd.io.sql.get_schema(df,name="yellow_tax",con=engine))
 
     parquet_to_csv(f"data/parquet/{parquet_name}", f"data/csv/{csv_name}")
     df_iter = pd.read_csv(f"data/csv/{csv_name}",iterator=True,chunksize=100000)
