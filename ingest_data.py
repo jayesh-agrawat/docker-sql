@@ -20,18 +20,25 @@ def main(parser):
     # download the csv file
     parquet_name = "output.parquet"
     csv_name = "output.csv"
-    os.system(f"wget -O data/parquet/{parquet_name} {url}")
+    # if parquet file
+    # linux
+    # os.system(f"wget -O data/parquet/{parquet_name} {url}")
+    # mac
+    # os.system(f"curl {url} -o data/parquet/{csv_name}")
+    # if csv file
+    # os.system(f"curl {url} -o data/csv/{csv_name}")
+    os.system(f"wget -O data/csv/{csv_name} {url}")
 
     engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{database}')
     # print(pd.io.sql.get_schema(df,name="yellow_tax",con=engine))
 
-    parquet_to_csv(f"data/parquet/{parquet_name}", f"data/csv/{csv_name}")
+    # parquet_to_csv(f"data/parquet/{parquet_name}", f"data/csv/{csv_name}")
     df_iter = pd.read_csv(f"data/csv/{csv_name}",iterator=True,chunksize=100000)
 
     df = next(df_iter)
     # len(df)
-    df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
-    df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+    # df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
+    # df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
 
     df.head(n=0).to_sql(name=table,con=engine,if_exists='replace')
     df.to_sql(name=table,con=engine,if_exists='append')
@@ -39,8 +46,8 @@ def main(parser):
     while True:
         t_start = time()
         df = next(df_iter)
-        df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
-        df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+        # df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
+        # df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
 
         df.to_sql(name=table,con=engine,if_exists='append')
 
