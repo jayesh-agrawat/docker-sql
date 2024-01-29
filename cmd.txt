@@ -118,14 +118,25 @@ python3 ingest_data.py \
     --table=yellow_taxi_trips \
     --url=${URL} 
 
-docker build -t taxi_ingest:v0001 .
+docker build -t taxi_ingest:v1 .
 
-docker run -it --network=pg-network \
+docker run -it\
     taxi_ingest:v2 \
     --user=root \
     --password=root \
-    --host=pg-database \
+    --host=pgdatabase \
     --port=5432 \
     --database=ny_taxi \
     --table=yellow_taxi_trips \
     --url=${URL}
+
+python3 ingest_data.py \
+    --user=root \
+    --password=root \
+    --host=localhost \
+    --port=5432 \
+    --database=ny_taxi \
+    --table=taxi_zone_lookup \
+    --url=http://192.168.1.6:8081/taxi+_zone_lookup.csv
+
+python3 -m http.server 8081
